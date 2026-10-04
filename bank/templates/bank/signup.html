@@ -1,0 +1,25 @@
+{% extends "bank/base.html" %}
+{% load tr %}
+{% block title %}{% t "signup.title" %}{% endblock %}
+{% block content %}
+<div class="auth-split">
+  <section class="promo">
+    <h1>{% t "signup.h1a" %}<br><span class="grad">{% t "signup.h1b" %}</span> {% t "signup.h1c" %}</h1>
+    <p>{% t "signup.sub" %}</p>
+    <ul>
+      <li><svg class="ic" aria-hidden="true"><use href="#i-key"/></svg>{% t "signup.li1" %}</li>
+      <li><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg>{% t "signup.li2" %}</li>
+    </ul>
+  </section>
+  <section class="auth">
+    <h2>{% t "signup.heading" %}</h2>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% for e in form.non_field_errors %}<div class="msg msg-error"><span>{{ e }}</span></div>{% endfor %}
+      {% for field in form %}{% include "bank/_field.html" %}{% endfor %}
+      <button class="btn block" type="submit">{% t "signup.submit" %}</button>
+    </form>
+    <p class="alt">{% t "signup.haveacct" %} <a href="{% url 'login' %}">{% t "signup.login_link" %}</a></p>
+  </section>
+</div>
+{% endblock %}

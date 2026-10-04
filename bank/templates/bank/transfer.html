@@ -1,0 +1,29 @@
+{% extends "bank/base.html" %}
+{% load money tr %}
+{% block title %}{% t "tr.title" %}{% endblock %}
+{% block content %}
+<section class="sheet">
+  <div class="steps"><span class="on">{% t "step.info" %}</span><span>{% t "step.confirm" %}</span><span>{% t "step.receipt" %}</span></div>
+  <h1>{% t "tr.title" %}</h1>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% for e in form.non_field_errors %}<div class="msg msg-error"><span>{{ e }}</span></div>{% endfor %}
+
+    <div class="amount-box">
+      <label for="id_amount" class="muted">{% t "tr.how_much" %}</label>
+      <div class="amount-row">{{ form.amount }}<span class="unit">{% t "cur" %}</span></div>
+      {% for e in form.amount.errors %}<small class="err">{{ e }}</small>{% endfor %}
+      <p class="amount-preview" id="amount-preview" data-cur="{% t 'cur' %}" aria-live="polite"></p>
+      <div class="chips" aria-label="{% t 'tr.chips' %}">
+        <button type="button" data-amount="100000">100,000</button>
+        <button type="button" data-amount="500000">500,000</button>
+        <button type="button" data-amount="1000000">1,000,000</button>
+      </div>
+      <p class="muted small">{% t "tr.available" amount=account.balance|money %}</p>
+    </div>
+
+    {% for field in form %}{% if field.name != "amount" %}{% include "bank/_field.html" %}{% endif %}{% endfor %}
+    <button class="btn block" type="submit">{% t "tr.continue" %}</button>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "bank/base.html" %}
+{% load money tr %}
+{% block title %}{% t "cf.title" %}{% endblock %}
+{% block content %}
+<section class="sheet">
+  <div class="steps"><span class="done">{% t "step.info" %}</span><span class="on">{% t "step.confirm" %}</span><span>{% t "step.receipt" %}</span></div>
+  <div class="flow">
+    <div class="party"><span class="avatar lg">{{ account.display_name|slice:":1" }}</span><small>{% t "cf.you" %}</small></div>
+    <div class="flow-line"><strong>{{ pending.amount|money }}</strong><small>{% t "cur" %}</small></div>
+    <div class="party"><span class="avatar lg alt">{{ receiver.display_name|slice:":1" }}</span><small>{{ receiver.masked_name }}</small></div>
+  </div>
+  <dl class="facts">
+    <div><dt>{% t "cf.to_acct" %}</dt><dd dir="ltr">{{ receiver.formatted_number }}</dd></div>
+    {% if pending.description %}<div><dt>{% t "cf.desc" %}</dt><dd>{{ pending.description }}</dd></div>{% endif %}
+    <div><dt>{% t "cf.after" %}</dt><dd>{{ remaining|money }} {% t "cur" %}</dd></div>
+  </dl>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% for field in form %}{% include "bank/_field.html" %}{% endfor %}
+    <div class="row">
+      <button class="btn grow" type="submit">{% t "cf.submit" %}</button>
+      <a class="btn ghost" href="{% url 'transfer' %}">{% t "cf.edit" %}</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

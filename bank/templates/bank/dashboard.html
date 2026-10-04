@@ -1,0 +1,61 @@
+{% extends "bank/base.html" %}
+{% load money tr %}
+{% block title %}{% t "nav.home" %}{% endblock %}
+{% block content %}
+<div class="bento">
+
+  <section class="b b-balance">
+    <p class="eyebrow">{% t "dash.total" %}</p>
+    <div class="balance"><strong class="count" data-value="{{ account.balance }}">{{ account.balance|money }}</strong><em>{% t "cur" %}</em></div>
+    <p class="net {% if net >= 0 %}in{% else %}out{% endif %}">
+      <svg class="ic" aria-hidden="true"><use href="#{% if net >= 0 %}i-up{% else %}i-down{% endif %}"/></svg>
+      {{ net_abs|money }} {% t "cur" %} {% t "dash.last30" %}
+    </p>
+    <div class="quick">
+      <a href="{% url 'transfer' %}"><span class="qc primary"><svg class="ic" aria-hidden="true"><use href="#i-send"/></svg></span>{% t "dash.send" %}</a>
+      <button type="button" data-copy="{{ account.number }}"><span class="qc"><svg class="ic" aria-hidden="true"><use href="#i-copy"/></svg></span>{% t "dash.account_no" %}</button>
+      <a href="{% url 'transactions' %}"><span class="qc"><svg class="ic" aria-hidden="true"><use href="#i-list"/></svg></span>{% t "dash.history" %}</a>
+    </div>
+    <svg class="spark" viewBox="0 0 300 100" preserveAspectRatio="none" role="img" aria-label="{% t 'dash.chart' %}">
+      <defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="sg-a"/><stop offset="1" class="sg-b"/></linearGradient></defs>
+      <path class="spark-area" d="{{ spark.area }}" fill="url(#sg)"/>
+      <path class="spark-line" d="{{ spark.line }}" pathLength="1" vector-effect="non-scaling-stroke"/>
+    </svg>
+  </section>
+
+  <div class="b-cardwrap">
+    <div class="card" data-tilt>
+      <div class="card-top"><span class="card-brand">{% t "brand" %}</span><span class="chip"></span></div>
+      <div class="card-name">{{ account.display_name }}</div>
+      <div class="card-bottom">
+        <button type="button" class="copy" data-copy="{{ account.number }}" title="{% t 'dash.copy_title' %}">
+          <span class="num" dir="ltr">{{ account.formatted_number }}</span>
+          <svg class="ic" aria-hidden="true"><use href="#i-copy"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="b b-stat in"><span class="ico"><svg class="ic" aria-hidden="true"><use href="#i-down"/></svg></span><small>{% t "dash.in30" %}</small><strong>{{ income|money }}</strong></div>
+  <div class="b b-stat out"><span class="ico"><svg class="ic" aria-hidden="true"><use href="#i-up"/></svg></span><small>{% t "dash.out30" %}</small><strong>{{ expense|money }}</strong></div>
+
+  <section class="b b-send">
+    <h2>{% t "dash.quick" %}</h2>
+    {% if contacts %}
+    <ul class="contacts">
+      <li><a href="{% url 'transfer' %}"><span class="avatar add"><svg class="ic" aria-hidden="true"><use href="#i-plus"/></svg></span><small>{% t "dash.new" %}</small></a></li>
+      {% for c in contacts %}
+      <li><a href="{% url 'transfer' %}?to={{ c.number }}"><span class="avatar">{{ c.display_name|slice:":1" }}</span><small>{{ c.display_name }}</small></a></li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="muted">{% t "dash.quick_empty" %}</p>
+    {% endif %}
+  </section>
+
+  <section class="b b-tx">
+    <div class="b-head"><h2>{% t "dash.recent" %}</h2><a class="more" href="{% url 'transactions' %}">{% t "dash.all" %}</a></div>
+    {% include "bank/_tx_list.html" with items=recent show_date=1 %}
+  </section>
+</div>
+{% endblock %}

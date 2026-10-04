@@ -1,0 +1,26 @@
+{% extends "bank/base.html" %}
+{% load tr %}
+{% block title %}{% t "txs.title" %}{% endblock %}
+{% block content %}
+<section class="sheet wide">
+  <h1>{% t "txs.title" %}</h1>
+  <div class="tabs">
+    <a href="?type=all" class="{% if kind == 'all' %}on{% endif %}">{% t "txs.all" %}</a>
+    <a href="?type=in" class="{% if kind == 'in' %}on{% endif %}">{% t "txs.in" %}</a>
+    <a href="?type=out" class="{% if kind == 'out' %}on{% endif %}">{% t "txs.out" %}</a>
+  </div>
+  {% for g in groups %}
+  <h3 class="day">{{ g.label }}</h3>
+  <div class="b">{% include "bank/_tx_list.html" with items=g.items %}</div>
+  {% empty %}
+  <p class="muted">{% t "txs.none" %}</p>
+  {% endfor %}
+  {% if page.paginator.num_pages > 1 %}
+  <div class="pager">
+    {% if page.has_previous %}<a class="btn ghost sm" href="?type={{ kind }}&amp;page={{ page.previous_page_number }}">{% t "txs.prev" %}</a>{% endif %}
+    <span>{% t "txs.page" n=page.number total=page.paginator.num_pages %}</span>
+    {% if page.has_next %}<a class="btn ghost sm" href="?type={{ kind }}&amp;page={{ page.next_page_number }}">{% t "txs.next" %}</a>{% endif %}
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

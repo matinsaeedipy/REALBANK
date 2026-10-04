@@ -1,0 +1,25 @@
+{% extends "bank/base.html" %}
+{% load money tr %}
+{% block title %}{% t "rc.title" %}{% endblock %}
+{% block content %}
+<section class="sheet receipt">
+  <div class="ticket-top">
+    <div class="seal"><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" pathLength="1"/></svg></div>
+    <p class="muted">{% if is_out %}{% t "rc.sent" %}{% else %}{% t "rc.received" %}{% endif %}</p>
+    <h1 class="big">{{ tx.amount|money }} <small>{% t "cur" %}</small></h1>
+  </div>
+  <div class="cut"></div>
+  <dl class="facts">
+    <div><dt>{% t "rc.ref" %}</dt><dd><button type="button" class="copy-inline" data-copy="{{ tx.reference }}" dir="ltr"><span>{{ tx.reference }}</span><svg class="ic" aria-hidden="true"><use href="#i-copy"/></svg></button></dd></div>
+    <div><dt>{% t "rc.when" %}</dt><dd dir="ltr">{{ tx.created_at|date:"Y/m/d H:i:s" }}</dd></div>
+    <div><dt>{% t "rc.from" %}</dt><dd>{% if tx.sender %}{{ tx.sender.display_name }}<br><small dir="ltr">{{ tx.sender.formatted_number }}</small>{% else %}{% t "brand" %}{% endif %}</dd></div>
+    <div><dt>{% t "rc.to" %}</dt><dd>{{ tx.receiver.display_name }}<br><small dir="ltr">{{ tx.receiver.formatted_number }}</small></dd></div>
+    {% if tx.description and tx.sender %}<div><dt>{% t "rc.desc" %}</dt><dd>{{ tx.description }}</dd></div>{% endif %}
+    <div><dt>{% t "rc.after" %}</dt><dd>{% if is_out %}{{ tx.sender_balance_after|money }}{% else %}{{ tx.receiver_balance_after|money }}{% endif %} {% t "cur" %}</dd></div>
+  </dl>
+  <div class="row">
+    <a class="btn grow" href="{% url 'dashboard' %}">{% t "rc.home" %}</a>
+    <button type="button" class="btn ghost" data-print><svg class="ic" aria-hidden="true"><use href="#i-print"/></svg>{% t "rc.print" %}</button>
+  </div>
+</section>
+{% endblock %}

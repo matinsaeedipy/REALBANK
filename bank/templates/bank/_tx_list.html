@@ -1,0 +1,17 @@
+{% load money tr %}
+<ul class="tx-list">
+  {% for t in items %}
+  <li>
+    <a class="tx" href="{% url 'receipt' reference=t.reference %}">
+      <span class="avatar sm {% if t.is_out %}out{% else %}in{% endif %}">{{ t.other_initial }}</span>
+      <span class="tx-main">
+        <strong>{{ t.title }}</strong>
+        <small>{% if show_date %}{{ t.created_at|date:"Y/m/d H:i" }}{% else %}{{ t.created_at|date:"H:i" }}{% endif %}{% if t.description and t.sender_id %} · {{ t.description }}{% endif %}</small>
+      </span>
+      <span class="tx-amt {% if t.is_out %}out{% else %}in{% endif %}">{% if t.is_out %}−{% else %}+{% endif %}{{ t.amount|money }}</span>
+    </a>
+  </li>
+  {% empty %}
+  <li class="empty">{% t "tx.empty" %}</li>
+  {% endfor %}
+</ul>
