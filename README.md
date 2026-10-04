@@ -74,7 +74,7 @@ MIT
 
 [فارسی](#simbank--سیم‌بانک) · **English**
 
-A bilingual (Persian / English) bank simulator built with Django: fictional money transfers between users, transaction PIN, receipts and history. For education only, no real money involved.
+A bilingual (Persian / English) bank  built with Django: fictional money transfers between users, transaction PIN, receipts and history.
 
 ## Features
 - Sign-up with a 10-digit account number and a simulated starting balance
